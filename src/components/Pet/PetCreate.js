@@ -1,29 +1,90 @@
 import React, { useState } from 'react';
-import { createPet } from '../../services/petService';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-function PetCreate() {
+const PetCreate = () => {
   const [name, setName] = useState('');
+  const [type, setType] = useState(''); // Assuming there's a type field as well
   const [color, setColor] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleCreatePet = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+
     try {
-      await createPet({ name, color });
-      navigate('/');
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        setError('You must be logged in to create a pet');
+        return;
+      }
+
+      const response = await axios.post(
+        'http://localhost:8080/api/pets/create',
+        {
+          name,
+          type, // Add the type to the request
+          color,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (response.status === 201 || 200) {
+        setSuccess('Pet created successfully!');
+        setName('');
+        setType(''); // Clear the type input
+        setColor('');
+      } else {
+        setError('Failed to create pet');
+      }
     } catch (error) {
-      console.error('Failed to create pet', error);
+      setError(`Error: ${error.response ? error.response.data : error.message}`);
+      console.error('Create pet failed', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-      <input type="text" placeholder="Color" value={color} onChange={(e) => setColor(e.target.value)} required />
-      <button type="submit">Create Pet</button>
-    </form>
+    <div className="container">
+      <h2>Create a New Pet</h2>
+      {error && <div className="error">{error}</div>}
+      {success && <div className="success">{success}</div>}
+      <form onSubmit={handleCreatePet}>
+        <div>
+          <label>Pet Name:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Type:</label>
+          <input
+            type="text"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Color:</label>
+          <input
+            type="text"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Create Pet</button>
+      </form>
+    </div>
   );
-}
+};
 
 export default PetCreate;

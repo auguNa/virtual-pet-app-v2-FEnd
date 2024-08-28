@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
-import PetList from './components/Pet/PetList';
-import PetDetail from './components/Pet/PetDetail';
+import UserPage from './components/User/UserPage';
 import PetCreate from './components/Pet/PetCreate';
+import PetDetail from './components/Pet/PetDetail';
 import Navbar from './components/common/Navbar';
 import PrivateRoute from './utils/PrivateRoute';
 
@@ -15,10 +15,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
         {/* Protect routes with PrivateRoute */}
         <Route element={<PrivateRoute />}>
-          <Route path="/" element={<PetList />} />
+          <Route path="/user" element={<UserPage />} />
           <Route path="/pets/:id" element={<PetDetail />} />
           <Route path="/create-pet" element={<PetCreate />} />
         </Route>

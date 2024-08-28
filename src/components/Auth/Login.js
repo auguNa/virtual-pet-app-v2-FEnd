@@ -21,11 +21,14 @@ const Login = () => {
       });
 
       const authToken = response.data; // Assuming the token is returned as plain text
+      console.log('Token received:', authToken);
 
       if (authToken) {
-        // Store the token in memory or localStorage
+        // Store the token in localStorage
         localStorage.setItem('authToken', authToken);
-        navigate('/'); // Redirect to the home page or another route
+        navigate('/user'); // Redirect to the user page
+        console.log('Navigating to /user');
+
       } else {
         setError('Login failed: No token received');
       }
