@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const PetCreate = () => {
   const [name, setName] = useState('');
-  const [type, setType] = useState(''); // Assuming there's a type field as well
+  const [type, setType] = useState(''); 
   const [color, setColor] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -24,7 +24,7 @@ const PetCreate = () => {
         'http://localhost:8080/api/pets/create',
         {
           name,
-          type, // Add the type to the request
+          type, 
           color,
         },
         {
@@ -37,7 +37,7 @@ const PetCreate = () => {
       if (response.status === 201 || 200) {
         setSuccess('Pet created successfully!');
         setName('');
-        setType(''); // Clear the type input
+        setType(''); 
         setColor('');
       } else {
         setError('Failed to create pet');

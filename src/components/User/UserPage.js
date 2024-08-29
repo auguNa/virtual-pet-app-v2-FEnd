@@ -42,6 +42,23 @@ const UserPage = () => {
       console.error('Error deleting pet', error);
     }
   };
+  const handleAction = async (petId, action) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/pets/${petId}/${action}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      const updatedPet = response.data;
+      setPets(pets.map((pet) => (pet.id === petId ? updatedPet : pet)));
+    } catch (error) {
+      console.error(`Error performing action ${action} on pet`, error);
+    }
+  };
 
   return (
     <div className="container">
@@ -53,10 +70,14 @@ const UserPage = () => {
             <h3>{pet.name}</h3>
             <p>Color: {pet.color}</p>
             <p>Mood: {pet.mood}</p>
-            <p>Energy Level: {pet.energyLevel}</p>
+            <p>Energy Level: {pet.energy}</p>
             {/* Add more pet details as needed */}
             <button onClick={() => navigate(`/pets/${pet.id}`)}>View / Update</button>
             <button onClick={() => handleDeletePet(pet.id)}>Delete</button>
+            {/* New buttons for actions */}
+            <button onClick={() => handleAction(pet.id, 'feed')}>Feed</button>
+            <button onClick={() => handleAction(pet.id, 'play')}>Play</button>
+            <button onClick={() => handleAction(pet.id, 'rest')}>Rest</button>
           </div>
         ))}
       </div>
