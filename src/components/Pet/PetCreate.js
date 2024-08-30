@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const PetCreate = () => {
   const [name, setName] = useState('');
@@ -7,6 +8,7 @@ const PetCreate = () => {
   const [color, setColor] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleCreatePet = async (e) => {
     e.preventDefault();
@@ -39,6 +41,7 @@ const PetCreate = () => {
         setName('');
         setType(''); 
         setColor('');
+        navigate('/user'); // Redirect to the /user page after successful creation
       } else {
         setError('Failed to create pet');
       }
