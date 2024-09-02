@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from 'react';
+// src/components/User/UserPage.js
+
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthContext';
 import './UserPage.css';
 
 const UserPage = () => {
   const [pets, setPets] = useState([]);
+  const { authState } = useContext(AuthContext);
   const navigate = useNavigate();
   const authToken = localStorage.getItem('authToken');
 
   useEffect(() => {
+    // Redirect admin users to the admin page
+    if (authState.role === 'admin') {
+      navigate('/admin');
+      return;
+    }
+
     // Fetch the user's pets from the backend
     const fetchPets = async () => {
       try {
@@ -24,7 +34,7 @@ const UserPage = () => {
     };
 
     fetchPets();
-  }, [authToken]);
+  }, [authToken, authState.role, navigate]);
 
   const handleCreatePet = () => {
     navigate('/create-pet');
@@ -42,6 +52,7 @@ const UserPage = () => {
       console.error('Error deleting pet', error);
     }
   };
+
   const handleAction = async (petId, action) => {
     try {
       const response = await axios.post(
@@ -71,10 +82,8 @@ const UserPage = () => {
             <p>Color: {pet.color}</p>
             <p>Mood: {pet.mood}</p>
             <p>Energy Level: {pet.energy}</p>
-            {/* Add more pet details as needed */}
             <button onClick={() => navigate(`/pets/${pet.id}`)}>View / Update</button>
             <button onClick={() => handleDeletePet(pet.id)}>Delete</button>
-            {/* New buttons for actions */}
             <button onClick={() => handleAction(pet.id, 'feed')}>Feed</button>
             <button onClick={() => handleAction(pet.id, 'play')}>Play</button>
             <button onClick={() => handleAction(pet.id, 'rest')}>Rest</button>

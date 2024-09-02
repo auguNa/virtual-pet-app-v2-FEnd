@@ -1,7 +1,9 @@
+// src/components/Auth/Login.js
+
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext'; // Ensure the path is correct
+import { AuthContext } from '../../contexts/AuthContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -26,8 +28,19 @@ const Login = () => {
       if (authToken) {
         // Store the token in localStorage
         localStorage.setItem('authToken', authToken);
-        login({ username }); // Update context with user info
-        navigate('/user'); // Redirect to the user page
+        
+        // Decode the token to get user role
+        const decodedToken = JSON.parse(atob(authToken.split('.')[1])); // Decode the JWT token
+        const userRole = decodedToken.role; // Assuming role is stored in token
+
+        login({ username }, userRole); // Update context with user info and role
+
+        // Redirect based on role
+        if (userRole === 'ADMIN') {
+          navigate('/admin'); // Redirect to the admin page
+        } else {
+          navigate('/user'); // Redirect to the user page
+        }
       } else {
         setError('Login failed: No token received');
       }
