@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+/*import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +42,6 @@ const AdminPage = () => {
         <thead>
           <tr>
             <th>Username</th>
-            <th>Email</th>
             <th>Pets</th>
           </tr>
         </thead>
@@ -71,3 +70,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+*/

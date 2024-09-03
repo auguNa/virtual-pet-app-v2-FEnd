@@ -29,17 +29,23 @@ const Login = () => {
         // Store the token in localStorage
         localStorage.setItem('authToken', authToken);
         
-        // Decode the token to get user role
+        // Decode the token to get user roles
         const decodedToken = JSON.parse(atob(authToken.split('.')[1])); // Decode the JWT token
-        const userRole = decodedToken.role; // Assuming role is stored in token
+        console.log('Decoded token:', decodedToken);
+        const userRoles = decodedToken.roles || []; // Assuming roles are stored in the token as an array
+
+        // Determine the user's role (assuming a single role for simplicity)
+        const userRole = userRoles.length > 0 ? userRoles[0] : undefined;
 
         login({ username }, userRole); // Update context with user info and role
 
         // Redirect based on role
-        if (userRole === 'ADMIN') {
+        if (userRole === 'ROLE_ADMIN') {
           navigate('/admin'); // Redirect to the admin page
-        } else {
+        } else if (userRole === 'ROLE_USER') {
           navigate('/user'); // Redirect to the user page
+        } else {
+          navigate('/'); // Redirect to the homepage or another default page if role is not recognized
         }
       } else {
         setError('Login failed: No token received');
